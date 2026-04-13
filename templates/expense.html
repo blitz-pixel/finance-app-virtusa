@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Expense{% endblock %}
+
+{%block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/shared.css')}}">
+
+{% endblock %}
+{%block extra_js %}
+    <script src="{{ url_for('static', filename = 'js/shared.js')}}"></script>
+    <script src="{{ url_for('static', filename = 'js/expense.js')}}"></script>
+{% endblock %}
+{% block navigation %}
+
+    <div class="nav-header">
+        <a href="{{ url_for('category') }}">Categories</a> 
+        <a href="{{ url_for('report') }}"> Report </a>
+    </div>
+
+    <div class="logout-link">
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+{% endblock %}
+{% block content %}
+
+
+<div class="main-container">
+
+    <div class="main-header">
+        <h2>Expense Tracker</h2>
+        <button onclick="openForm()">Add Expense</button>
+    </div>
+
+    <table id="data-table">
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ expense.name }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.amount }}</td>
+            <td>{{ expense.date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</div>
+
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3>Add Expense</h3>
+
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="text" id="category" placeholder="Category" required>
+        <input type="number" id="amount" placeholder="Amount" required>
+        <input type="date" id="date">
+
+        <div class="modal-button">
+            <button onclick="addExpense()">Save</button>
+            <button onclick="closeForm()">Cancel</button>
+        </div>
+    </div>
+</div>
+ 
+
+{% endblock %} 
+

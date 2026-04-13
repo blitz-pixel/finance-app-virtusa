@@ -1,0 +1,29 @@
+.report-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 30px;
+}
+
+.visual-container {
+  width: 80% ;
+  height: 400px ;
+  background-color: white;
+
+}
+

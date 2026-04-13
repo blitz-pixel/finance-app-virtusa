@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Expense Report{% endblock %}
+
+{%block extra_css %}
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/report.css') }}">
+{% endblock %}
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="report.js"></script>
+{% endblock %}
+{% block navigation %}
+
+    <div class="nav-header">
+        <a href="{{ url_for('expense') }}">Expenses</a> 
+        <a href="{{ url_for('category') }}">Categories</a>
+    </div>
+      <div class="logout-link">
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+{% endblock %}
+{% block content %}
+<div class="report-container">
+            <div class="report-header">
+            <h2> Report </h2>
+            </div>
+            <div class="options-container">
+            
+            <label for="frequency"> Frequency:</label>
+            <select id="frequency">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+            </select>
+            
+            <label for="category"> Category:</label>
+            <select id="category">
+                {% if categories|length == 0 %}
+                    <option value="">No categories available</option>
+                {% else %}
+                    {% for category in categories %}
+                        <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+
+            </div>
+             <div class="visual-container">
+                <canvas id="expenseChart" >
+                    <p> A test for canvas tag</p>
+                </canvas>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+

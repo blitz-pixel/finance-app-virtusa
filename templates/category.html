@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Category{% endblock %}
+
+{%block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shared.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/shared.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/category.js') }}"></script>
+{% endblock %}
+
+{% block navigation %}
+
+    <div class="nav-header">
+        <a href="{{ url_for('expense') }}">Expenses</a> 
+        <a href="{{ url_for('report') }}">Report </a>
+    </div>
+    <div class="logout-link">
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+
+ 
+    <div class="main-header">
+        <h2>Categories </h2>
+        <button onclick="openForm()">Add Category</button>
+    </div>
+
+    <table id="data-table">
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>Name</th>
+            <th>Date added</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ category.name }}</td>
+            <td>{{ category.date_added }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</div>
+
+
+
+</div>
+
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3>Add Category</h3>
+
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="date" id="date">
+
+        <div class="modal-button">
+            <button onclick="addCategory()">Save</button>
+            <button onclick="closeForm()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

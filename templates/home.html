@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Expense Report{% endblock %}
+
+{%block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+{% block navigation %}
+
+    <div class="nav-header">
+        <a href="{{ url_for('login') }}">Login</a> 
+        <a href="{{ url_for('signup') }}">Signup</a>
+    </div>
+
+
+{% endblock %}
+{% block content %}
+<div class="text-container">
+    <div class="main-heading">
+        <h2>Welcome to the Expense Tracker App</h2>
+    </div>
+    <div class="main-content">
+        <p>
+        The Smart Expense Tracker is a dedicated solution designed to address the complexities of personal financial management. 
+        Many individuals encounter significant challenges in maintaining an accurate record of daily expenditures and interpreting their underlying spending behaviors. 
+        This application provides a systematic framework to log, categorize, and evaluate financial data, ensuring that every transaction is accounted for with precision.
+        By facilitating the recording of dates, categories, and descriptions, the tool converts raw data into structured insights. 
+        Through the generation of monthly summaries and categorical breakdowns the data is visualized via analytical charts thorugh which users can objectively identify their primary areas of expenditure. 
+        The objective of this system is to provide the fiscal transparency necessary to detect inefficiencies and implement strategic reductions in spending, ultimately fostering long-term financial stability.
+        </p>
+    </div>
+    </div>
+{% endblock %}
+
+
+
+
