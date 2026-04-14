@@ -42,28 +42,27 @@ def login():
 def signup():
     # print(request.method)
     if request.method == "POST":
-        print("\n--- INCOMING REQUEST DEBUG ---")
-        print(f"Method: {request.method}")
-        print(f"Headers: \n{request.headers}") # See if 'Content-Type' is missing
-        print(f"Form Data: {request.form}")    # If data is here, your JS header is wrong
-        print(f"Raw Body: {request.data}")      # Shows you exactly what JS sent
-        print("-------------------------------\n")
-        # data = request.get_json()
-        # username  = data.get('username')
-        # email = data.get('email')
-        # password = data.get('password')
-        # print(username,email,password)
-        # hashed_password = generate_password_hash(password)
-        # print(check_password_hash(hashed_password,password))
+        data = request.get_json()
+        username  = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        hashed_password = generate_password_hash(password)
+        new_user = User(user_name=username, email=email, password=hashed_password)
+        try:
+            if User.query.filter_by(email=email).first():
+                return jsonify({"message": "Email already exists"}), 400
+            db.session.add(new_user)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"message": "An error occurred while checking email uniqueness"}), 500
+       
+        
+        return jsonify({"message": "User registered successfully"}),200
+        # add logic for audit table
+      
     
     return render_template('signup.html')
-    # username = request.form.get('username')
-    # email = request.form.get('email')
-    # password = request.form.get('password')
-    # new_user = User(user_name=username, email=email, password=password)
-    # db.session.add(new_user)
-    # db.session.commit()
-
 
 
 @app.route('/forget-password')

@@ -1,3 +1,11 @@
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted){
+        window.location.reload();
+    }
+})
+
+
+
 function passwordValidator(newPasswordTag, para, button) {
     newPasswordTag.style.borderStyle = 'solid';
     newPasswordTag.style.borderWidth = '2px';
@@ -20,8 +28,7 @@ function passwordValidator(newPasswordTag, para, button) {
 
 
 function checkPassword() {
-    // event.preventDefault();
-    console.log(" function called");
+    // console.log("checkPassword function called");
     var passwordTag = document.getElementById('password');
     var para = document.getElementById('password-para');
     var button = document.querySelector('button');
@@ -29,7 +36,7 @@ function checkPassword() {
 }
 
 function checkConfirmPassword() {
-    console.log("checkConfirmPassword function called");
+    // console.log("checkConfirmPassword function called");
     var passwordTag = document.getElementById('password');
     var confirmPasswordTag = document.getElementById('confirm_password');
     var para = document.getElementById('confirm-password-para');
@@ -43,20 +50,26 @@ function checkConfirmPassword() {
             button.disabled = false;
         }});
     }
-function submitForm(event) {
+
+async function submitForm(event) {
     event.preventDefault();
-    console.log(event.defaultPrevented);
-    console.log("submitForm function called");
+    // console.log("submitForm function called");
     
     var form = document.querySelector('form');
     var username = form.elements['username'].value;
     var email = form.elements['email'].value;
     var password = form.elements['password'].value;
     var confirm_password = form.elements['confirm_password'].value;
+    var snackbar = document.getElementById("snackbar");
+
+    if (password !== confirm_password) {
+        snackbar.className = "show-error";
+        snackbar.innerText = "Passwords do not match.";
+        setTimeout(function(){ snackbar.className = snackbar.className.replace("show-error", ""); }, 3000);
+        return;
+    }
     
-    console.log(username, email, password);
-    
-    fetch('/signup', {
+    const response = await fetch('/signup', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -64,10 +77,24 @@ function submitForm(event) {
             email: email,
             password: password,
         })
-    }).then(data => {
-          console.log('Success:', data);
-          form.reset();
-      }).catch(error => {
-          console.error('Error:', error);
-      });
+    });
+
+    try {
+    const data = await response.json();
+    if (response.status !== 200) {
+        snackbar.className = "show-error";
+        snackbar.innerText = data.message || "An error occurred during registration";
+        setTimeout(function(){ snackbar.className = snackbar.className.replace("show-error", ""); }, 2000);
+        return;
+    }
+    snackbar.className = "show-success";
+    snackbar.innerText = data.message || "User registered successfully";
+    setTimeout(function(){ snackbar.className = snackbar.className.replace("show-success", ""); }, 2000);
+    setTimeout(function(){ window.location.href = '/expense'; }, 1000);   // dummy redirect
+    } catch (error) {
+        snackbar.className = "show-error";
+        snackbar.innerText = "An error occurred during registration";
+        setTimeout(function(){ snackbar.className = snackbar.className.replace("show-error", ""); }, 2000);
+        return;
+    }
 }
