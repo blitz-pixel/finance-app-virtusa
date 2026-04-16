@@ -41,15 +41,22 @@
     </thead>
 
     <tbody>
-        {% for category in categories %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ category.name }}</td>
-            <td>{{ category.date_added }}</td>
-        </tr>
-        {% endfor %}
+        {% if categories %}
+            {% for category in categories %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ category.name }}</td>
+                <td>{{ category.date_added }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="3">No categories found.</td>
+            </tr>
+        {% endif %}
     </tbody>
 </table>
+ <div id="snackbar"></div>
 
 </div>
 
@@ -66,7 +73,7 @@
         <input type="date" id="date">
 
         <div class="modal-button">
-            <button onclick="addCategory()">Save</button>
+            <button onclick="addCategory(event)">Save</button>
             <button onclick="closeForm()">Cancel</button>
         </div>
     </div>

@@ -46,8 +46,8 @@
 .links {
     display: flex;
     flex-direction: row;
-    margin-top: 20px;
-    margin-left: 58px;
+    /* margin-top: 20px; */
+    /* margin-left: 58px; */
     gap: 50px;
     align-items: center;
 }

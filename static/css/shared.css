@@ -10,14 +10,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* background-color: white; */
-   
+    
 }
 
 .main-header button {
     padding: 10px 15px;
     background-color: rgb(120, 120, 132);
-    color: rgb(0, 0, 0);
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -26,17 +25,23 @@
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid black;
+    border-radius: 10px;
+    overflow: hidden;
     margin-top: 20px;
     background: white;
 }
 
 th, td {
     padding: 10px;
-    border: 1px solid rgb(0, 0, 0);
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
     text-align: center;
     color: black;
 }
+
 
 th {
     background-color: white;
@@ -81,7 +86,7 @@ th {
 .modal-button button {
     padding: 8px 12px;
     background-color: rgb(120, 120, 132);
-    color: rgb(0, 0, 0);
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -97,3 +102,11 @@ th {
 }
 
 
+#description {
+    width: 85%;          
+    height: 100px;        
+    padding: 10px;         
+    border-radius: 8px;   
+    border: 1px solid black;
+    resize: vertical;      
+}

@@ -63,8 +63,18 @@
         <h3>Add Expense</h3>
 
         <input type="text" id="name" placeholder="Name" required>
-        <input type="text" id="category" placeholder="Category" required>
+        <select id="category">
+            {% if categories %}
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            {% else %}
+                <option value="">No categories available</option>
+            {% endif %}
+        </select>
+        <!-- <input type="text" id="category" placeholder="Category" required> -->
         <input type="number" id="amount" placeholder="Amount" required>
+        <textarea id="description" placeholder="Description" rows="5"></textarea>
         <input type="date" id="date">
 
         <div class="modal-button">

@@ -13,12 +13,13 @@
 <div class="authentication-container">
         <div class = "authentication-form">
             <h2>Login</h2>
-            <form method="POST" action="/login">
+            <form onsubmit="submitCredentials(event)">
                 <input type="text" name="username" placeholder="username" id="username" required><br>
                 <input type="password" name="password" placeholder="password" id="password" required><br>
-                <button type="submit" onclick="submitCredentials()">Login</button>
+                <button type="submit">Login</button>
             </form>
         </div>
+          <div id="snackbar"></div>
         <br><br>
         <div class = "links">
             <a href="{{ url_for('signup') }}" >Don't have an account? Register</a>

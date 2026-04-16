@@ -18,20 +18,14 @@ function passwordValidator(newPasswordTag, button,para) {
     
 }
 
-    
 
 function resetPassword(event) {
     event.preventDefault();
-    console.log("Reset password function called");
-    // console.log(document.getElementById('email').value);
-    // console.log(JSON.stringify({email: document.getElementById('email').value}));
     var form = document.getElementById('forget-form');
     var emailTag = form.elements['email'];
     var para = form.querySelector('p');
     var button = form.querySelector('button');
    
-    // console.log(emailTag.value)
-
     fetch('/forgot_password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -81,6 +81,7 @@ async function submitForm(event) {
 
     try {
     const data = await response.json();
+    // console.log(response);
     if (response.status !== 200) {
         snackbar.className = "show-error";
         snackbar.innerText = data.message || "An error occurred during registration";
@@ -90,7 +91,7 @@ async function submitForm(event) {
     snackbar.className = "show-success";
     snackbar.innerText = data.message || "User registered successfully";
     setTimeout(function(){ snackbar.className = snackbar.className.replace("show-success", ""); }, 2000);
-    setTimeout(function(){ window.location.href = '/expense'; }, 1000);   // dummy redirect
+    setTimeout(function(){ window.location.href = '/login'; }, 1000);   // dummy redirect
     } catch (error) {
         snackbar.className = "show-error";
         snackbar.innerText = "An error occurred during registration";
