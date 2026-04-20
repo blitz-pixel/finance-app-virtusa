@@ -3,8 +3,35 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
+    padding-bottom: 24px;
 }
+
+.cat-label{
+    padding-top: 18px;
+}
+
+.category-select{
+     width: 102%; 
+    box-sizing: border-box; 
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #222; 
+    color: #e0e0e0;
+    border: 1px solid #444;
+    border-radius: 6px;
+    outline: none;
+}
+.logout-link{
+    display: flex;
+    flex-direction: row;
+    margin-top: -20px;
+    margin-right: 20px;
+    justify-content: flex-end;
+    
+}
+
 
 .report-header {
     display: flex;
@@ -20,10 +47,97 @@
     padding: 30px;
 }
 
-.visual-container {
-  width: 80% ;
-  height: 400px ;
-  background-color: white;
+.chart-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(320px, 1fr));
+    gap: 20px;
+    width: 100%;
+    padding: 0 20px 20px;
+}
 
+/* .chart-monthly {
+    padding: 16px;
+    border-radius: 16px;
+    background: gray;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    min-height: 360px;
+} */
+
+.chart-monthly, .chart-yearly {
+    grid-column: 1 / -1;
+}
+
+.chart-monthly h3 , .chart h3, .chart-yearly h3 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+
+.chart-monthly canvas,.chart canvas, .chart-yearly canvas{
+    width: 100% !important;
+    height: 500px !important;
+}
+.chart, .chart-monthly, .chart-yearly {
+    padding: 16px;
+    border-radius: 16px;
+    background-color: #222; 
+    /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); */
+    min-height: 360px;
+}
+
+/* .chart h3 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    color: black;
+} */
+
+
+/* .chart canvas {
+    width: 100% !important;
+    height: 280px !important;
+} */
+
+
+.summary-card {
+   background-color: #222; 
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 360px;
+}
+
+.yearly-summary-list {
+    display: grid;
+    gap: 10px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid white;
+    border-radius: 10px;
+    background: rgb(100, 93, 93);
+     border-color: rgb(100, 93, 93);
+}
+
+.summary-year {
+    font-weight: 600;
+    color: #000000;
+}
+
+.summary-label {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: black;
 }
 

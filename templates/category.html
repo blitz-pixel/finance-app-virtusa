@@ -37,6 +37,7 @@
             <th>S.No</th>
             <th>Name</th>
             <th>Date added</th>
+            <th></th>
         </tr>
     </thead>
 
@@ -47,11 +48,12 @@
                 <td>{{ loop.index }}</td>
                 <td>{{ category.name }}</td>
                 <td>{{ category.date_added }}</td>
+                <td><button onclick="deleteData(event)" class="delete-button" data-id="{{ category.category_id }}">Delete</button></td>
             </tr>
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="3">No categories found.</td>
+                <td colspan="4">No categories found.</td>
             </tr>
         {% endif %}
     </tbody>
@@ -69,13 +71,15 @@
     <div class="modal-content">
         <h3>Add Category</h3>
 
+        <form onsubmit="addCategory(event)">
         <input type="text" id="name" placeholder="Name" required>
         <input type="date" id="date">
 
         <div class="modal-button">
-            <button onclick="addCategory(event)">Save</button>
+            <button type="submit">Save</button>
             <button onclick="closeForm()">Cancel</button>
         </div>
+        </form>
     </div>
 </div>
 

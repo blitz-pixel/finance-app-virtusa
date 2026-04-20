@@ -25,7 +25,7 @@
 
 
 <div class="main-container">
-
+     <div id="snackbar"></div>
     <div class="main-header">
         <h2>Expense Tracker</h2>
         <button onclick="openForm()">Add Expense</button>
@@ -35,23 +35,31 @@
     <thead>
         <tr>
             <th>S.No</th>
-            <th>Name</th>
-            <th>Category</th>
             <th>Amount</th>
+            <th>Category</th>
             <th>Date</th>
+            <th>Description</th>
+            <th></th>
         </tr>
     </thead>
 
     <tbody>
-        {% for expense in expenses %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ expense.name }}</td>
-            <td>{{ expense.category }}</td>
-            <td>{{ expense.amount }}</td>
-            <td>{{ expense.date }}</td>
-        </tr>
-        {% endfor %}
+        {% if expenses %}
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ expense.amount }}</td>
+                <td>{{ expense.category.name }}</td>
+                <td>{{ expense.date }}</td>
+                <td>{{ expense.description }}</td>
+                <td><button onclick="deleteData(event)" class="delete-button" data-id="{{ expense.transaction_id }}">Delete</button></td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6">No expenses found.</td>
+            </tr>
+        {% endif %}
     </tbody>
 </table>
 
@@ -61,26 +69,27 @@
 <div id="modal" class="modal">
     <div class="modal-content">
         <h3>Add Expense</h3>
+        <form onsubmit="addExpense(event)">
+            <select id="category" style="width: 90%;" required>
+                {% if categories %}
+                    <option value="" selected disabled>Select category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.name }}">{{ category.name }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="">No categories available</option>
+                {% endif %}
+            </select>
+            <!-- <input type="text" id="category" placeholder="Category" required> -->
+            <input type="number" id="amount" placeholder="Amount" required>
+            <textarea id="description" placeholder="Description" rows="5"></textarea>
+            <input type="date" id="date">
 
-        <input type="text" id="name" placeholder="Name" required>
-        <select id="category">
-            {% if categories %}
-                {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
-                {% endfor %}
-            {% else %}
-                <option value="">No categories available</option>
-            {% endif %}
-        </select>
-        <!-- <input type="text" id="category" placeholder="Category" required> -->
-        <input type="number" id="amount" placeholder="Amount" required>
-        <textarea id="description" placeholder="Description" rows="5"></textarea>
-        <input type="date" id="date">
-
-        <div class="modal-button">
-            <button onclick="addExpense()">Save</button>
-            <button onclick="closeForm()">Cancel</button>
-        </div>
+            <div class="modal-button">
+                <button type="submit">Save</button>
+                <button  onclick="closeForm()">Cancel</button>
+            </div>
+        </form>
     </div>
 </div>
  

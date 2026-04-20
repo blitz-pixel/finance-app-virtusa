@@ -1,8 +1,9 @@
 from flask import Flask, render_template, url_for, redirect, jsonify, request, Response, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func, extract
 from  werkzeug.security import generate_password_hash, check_password_hash
 import os
-from datetime import datetime
+# from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -34,6 +35,7 @@ class Category(db.Model):
     user_id = db.Column(db.BigInteger, db.ForeignKey('users.user_id'), nullable=True)
     name = db.Column(db.String(255), nullable=False)
     date_added = db.Column(db.Date, nullable=False, server_default=db.func.current_date())
+    expenses = db.relationship('Expense', backref='category', lazy=True)
 
     def to_dict(self):
         return {
@@ -42,7 +44,7 @@ class Category(db.Model):
         }
 
 class Expense(db.Model):
-    __tablename__ = 'expense'
+    __tablename__ = 'transaction'
     transaction_id = db.Column(db.BigInteger, primary_key=True, autoincrement=True, nullable=False)
     date = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     amount = db.Column(db.Float, nullable=False)
@@ -99,6 +101,16 @@ def signup():
             elif User.query.filter_by(user_name=username).first():
                 return jsonify({"message": "Username already exists"}), 400
             db.session.add(new_user)
+            db.session.flush()
+            new_categories = [
+                Category(name="Housing", user_id = new_user.user_id),
+                Category(name="Entertainment", user_id = new_user.user_id),
+                Category(name="Education", user_id = new_user.user_id),
+                Category(name="Transportation", user_id = new_user.user_id),
+                Category(name="Gifts & Donations", user_id = new_user.user_id),
+                Category(name="Miscellaneous", user_id = new_user.user_id)
+            ]
+            db.session.add_all(new_categories)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
@@ -117,14 +129,64 @@ def signup():
 def forget_password():
     return render_template('forget-password.html')
 
-@app.route('/expense')
+@app.route('/expense',methods=['GET', 'POST','DELETE'])
 def expense():
     if 'username' not in session:
         return redirect(url_for('login'))
-    
-    return render_template('expense.html')
+    username = session.get('username')
+    try:
+        user = User.query.filter_by(user_name=username).first()
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+        # categories = Category.query.filter_by(user_id=user.user_id).all()
+    except Exception as e:
+        print(f"Error occurred while displaying categories: {e}")
+        return jsonify({"message": "An error occurred"}), 500
+    if request.method == 'POST':
+        data = request.get_json()
+        category = data.get('category')
+        amount = data.get('amount')
+        if int(amount) < 0:
+            return jsonify({"message": "Amount cannot be negative"}), 400
+        elif int(amount) > 999999999:
+            return jsonify({"message": "Amount exceeds maximum limit"}), 400
+        date = data.get('date') or db.func.now()
+        description = data.get('description')
+        category_id = Category.query.filter_by(name=category, user_id=user.user_id).first().category_id
+        new_expense = Expense(category_id=category_id, amount=amount, date=date, description=description, user_id=user.user_id)
+        try:
+            db.session.add(new_expense)
+            db.session.flush()
+            new_date = new_expense.date.strftime("%Y-%m-%d %H:%M:%S")
+            transaction_id = new_expense.transaction_id
+            db.session.commit()
+            return jsonify({"message": "Expense added successfully", "date" : new_date, "transaction_id" : transaction_id}), 200
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error occurred while adding expense: {e}")
+            return jsonify({"message": "An error occurred"}), 500
+    elif request.method == 'DELETE':
+        expense_id = request.args.get('expense_id')
+        try:
+            db.session.query(Expense).filter(Expense.transaction_id == expense_id).delete()
+            db.session.commit()
+            return jsonify({"message": "Expense deleted successfully"}), 200
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error occurred while deleting expense: {e}")
+            return jsonify({"message": "An error occurred"}), 500
 
-@app.route('/category', methods=['GET', 'POST'])
+    
+    try:
+        categories = Category.query.filter_by(user_id=user.user_id).all()
+        expenses = Expense.query.filter_by(user_id=user.user_id).all()
+    except Exception as e:
+        print(f"Error occurred while displaying categories: {e}")
+        return jsonify({"message": "An error occurred"}), 500
+    print(categories)
+    return render_template('expense.html',categories=categories, expenses=expenses)
+
+@app.route('/category', methods=['GET', 'POST', 'DELETE'])
 def category():
     if 'username' not in session:
         return redirect(url_for('login'))
@@ -133,7 +195,6 @@ def category():
         user = User.query.filter_by(user_name=username).first()
         if not user:
             return jsonify({"message": "User not found"}), 404
-        categories = Category.query.filter_by(user_id=user.user_id).all()
     except Exception as e:
         print(f"Error occurred while displaying categories: {e}")
         return jsonify({"message": "An error occurred"}), 500
@@ -147,17 +208,152 @@ def category():
                 return jsonify({"message": "Category already exists"}), 400
             new_category = Category(name=name,date_added=date,user_id=user.user_id)
             db.session.add(new_category)
+            db.session.flush()
+            new_date = new_category.date_added
             db.session.commit()
+            return jsonify({"message": "Category added successfully", "date": new_date}), 200
         except Exception as e:
             db.session.rollback()
             print(f"Error occurred while adding category: {e}")
-        return jsonify({"message": "Category added successfully"}), 200
-    
+            return jsonify({"message": "An error occurred"}), 500
+    elif request.method == 'DELETE':
+        category_id = request.args.get('category_id')
+        try:
+            db.session.query(Category).filter(Category.category_id == category_id, Category.user_id == user.user_id).delete()
+            db.session.commit()
+            return jsonify({"message": "Category deleted successfully"}), 200
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error occurred while deleting category: {e}")
+            return jsonify({"message": "An error occurred"}), 500
+    try:
+        categories = Category.query.filter_by(user_id=user.user_id).all()
+    except Exception as e:
+        print(f"Error occurred while displaying categories: {e}")
+        return jsonify({"message": "An error occurred"}), 500
+  
+
     return render_template('category.html',categories=categories)
 
-@app.route('/report')
+@app.route('/report', methods=['GET', 'POST'])
 def report():
-    return render_template('report.html')
+    username = session.get('username')
+    user = User.query.filter_by(user_name=username).first()
+    if not user:
+        return redirect(url_for('login'))
+
+    categories = [
+        category.name
+        for category in Category.query.filter_by(user_id=user.user_id).order_by(Category.name).all()
+    ]
+
+    if request.method == 'POST':
+        monthly_totals = (
+            db.session.query(
+                extract('year', Expense.date).label('year'),
+                extract('month', Expense.date).label('month'),
+                func.coalesce(func.sum(Expense.amount), 0).label('totalAmount'),
+            )
+            .filter(Expense.user_id == user.user_id)
+            .group_by(
+                extract('year', Expense.date),
+                extract('month', Expense.date),
+            )
+            .order_by(
+                extract('year', Expense.date),
+                extract('month', Expense.date),
+            )
+            .all()
+        )
+
+        yearly_totals = (
+            db.session.query(
+                extract('year', Expense.date).label('year'),
+                func.coalesce(func.sum(Expense.amount), 0).label('totalAmount'),
+            )
+            .filter(Expense.user_id == user.user_id)
+            .group_by(extract('year', Expense.date))
+            .order_by(extract('year', Expense.date))
+            .all()
+        )
+
+        monthly_category_totals = (
+            db.session.query(
+                Category.name.label('category_name'),
+                extract('year', Expense.date).label('year'),
+                extract('month', Expense.date).label('month'),
+                func.coalesce(func.sum(Expense.amount), 0).label('totalAmount'),
+            )
+            .join(Category, Expense.category_id == Category.category_id)
+            .filter(Expense.user_id == user.user_id)
+            .group_by(
+                Category.name,
+                extract('year', Expense.date),
+                extract('month', Expense.date),
+            )
+            .order_by(
+                extract('year', Expense.date),
+                extract('month', Expense.date),
+                Category.name,
+            )
+            .all()
+        )
+
+        yearly_category_totals = (
+            db.session.query(
+                Category.name.label('category_name'),
+                extract('year', Expense.date).label('year'),
+                func.coalesce(func.sum(Expense.amount), 0).label('totalAmount'),
+            )
+            .join(Category, Expense.category_id == Category.category_id)
+            .filter(Expense.user_id == user.user_id)
+            .group_by(
+                Category.name,
+                extract('year', Expense.date),
+            )
+            .order_by(
+                extract('year', Expense.date),
+                Category.name,
+            )
+            .all()
+        )
+
+        return jsonify({"message" : "Data fetched successfully",
+            "monthly_totals": [
+                {
+                    "year": int(row.year),
+                    "month": int(row.month),
+                    "totalAmount": float(row.totalAmount),
+                }
+                for row in monthly_totals
+            ],
+            "yearly_totals": [
+                {
+                    "year": int(row.year),
+                    "totalAmount": float(row.totalAmount),
+                }
+                for row in yearly_totals
+            ],
+            "monthly_category_totals": [
+                {
+                    "category_name": row.category_name,
+                    "year": int(row.year),
+                    "month": int(row.month),
+                    "totalAmount": float(row.totalAmount),
+                }
+                for row in monthly_category_totals
+            ],
+            "yearly_category_totals": [
+                {
+                    "category_name": row.category_name,
+                    "year": int(row.year),
+                    "totalAmount": float(row.totalAmount),
+                }
+                for row in yearly_category_totals
+            ],
+        }), 200
+
+    return render_template('report.html', categories=categories)
 
 @app.route('/logout')
 def logout():

@@ -1,4 +1,33 @@
-let categories = [];
+// let categories = [];
+;
+
+async function deleteData(event) {
+    event.preventDefault();
+    var row = event.target.closest('tr');
+    // var 
+    var categoryId = event.target.getAttribute('data-id');
+    var snackbar = document.getElementById("snackbar");
+    try {
+        const response = await fetch(`/category?category_id=${categoryId}`,{
+            method: 'DELETE'
+        })
+        const data = await response.json();
+        if (response.status !== 200){
+            snackbar.className = "show-error";
+            snackbar.innerText = data.message || "An error occurred during deleting category.";
+            setTimeout(function(){snackbar.className = snackbar.className.replace("show")}, 2000);
+            return;
+        }
+        snackbar.className = "show-success";
+        snackbar.innerText = data.message || "Category deleted successfully!";
+        setTimeout(function(){snackbar.className = snackbar.className.replace("show-success")}, 2000);
+        row.remove()
+    } catch (error){
+        snackbar.className = "show-error";
+        snackbar.innerText = "An error occurred during deleting category.";
+        setTimeout(function(){snackbar.className = snackbar.className.replace("show")})
+    }
+}
 
 async function addCategory(event) {
     event.preventDefault();
@@ -16,7 +45,7 @@ async function addCategory(event) {
             body: JSON.stringify({name, date})
         });
         const data = await response.json();
-        console.log(response);
+        // console.log(response);
         if (response.status !== 200) {
             snackbar.className = "show-error";
             snackbar.innerText = data.message || "An error occurred during adding category.";
@@ -24,13 +53,15 @@ async function addCategory(event) {
             return;
         }
 
+        new_date = data.date || date;
         snackbar.className = "show-success";
         snackbar.innerText = data.message || "Category added successfully!";
         setTimeout(function(){ snackbar.className = snackbar.className.replace("show-success", ""); }, 2000);
          row.innerHTML = `
-            <td>${table.rows.length}</td>
+            <td>${table.rows.length - 1}</td>
             <td>${name}</td>
-            <td>${date}</td>
+            <td>${new_date}</td>
+            <td><button onclick="deleteData(event)" class="delete-button" data-id="${data.category_id}">Delete</button></td>
         `;
     }catch (error) {
         snackbar.className = "show-error";

@@ -8,7 +8,7 @@
 {% endblock %}
 {% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="report.js"></script>
+    <script src="{{ url_for('static', filename = 'js/report.js') }}"></script>
 {% endblock %}
 {% block navigation %}
 
@@ -27,30 +27,39 @@
             <h2> Report </h2>
             </div>
             <div class="options-container">
-            
-            <label for="frequency"> Frequency:</label>
-            <select id="frequency">
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-            </select>
-            
-            <label for="category"> Category:</label>
-            <select id="category">
+            <div id="snackbar"></div>
+  
+            <label for="category" class="cat-label"> Category:</label>
+            <select id="category" class="category-select">
                 {% if categories|length == 0 %}
                     <option value="">No categories available</option>
                 {% else %}
+                    <option value="">All Categories</option>
                     {% for category in categories %}
                         <option value="{{ category }}">{{ category }}</option>
                     {% endfor %}
                 {% endif %}
             </select>
+            <button onclick="generateGraphs(event)" type="button" class="category-select">Generate</button>
 
             </div>
-             <div class="visual-container">
-                <canvas id="expenseChart" >
-                    <p> A test for canvas tag</p>
-                </canvas>
+             <div class="chart-container">
+                <div class="chart-monthly" >
+                    <h3>Monthly Category Totals</h3>
+                    <canvas id="monthlyCategoryChart"></canvas>
+                </div>
+                <div class="chart-yearly" >
+                    <h3>Yearly Category Totals</h3>
+                    <canvas id="yearlyCategoryChart"></canvas>
+                </div>
+                <div class="chart" >
+                    <h3>Category Split</h3>
+                    <canvas id="pieCategoryChart"></canvas>
+                </div>
+                <div class="summary-card">
+                <span class="summary-label">Yearly Totals</span>
+                <div id="yearlySummary" class="yearly-summary-list"></div>
+            </div>
         </div>
     </div>
 {% endblock %}

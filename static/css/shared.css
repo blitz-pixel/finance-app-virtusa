@@ -27,24 +27,26 @@ table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    border: 1px solid black;
+    border: 1px solid #333;
     border-radius: 10px;
     overflow: hidden;
     margin-top: 20px;
-    background: white;
+    background-color: #121212;
+    
 }
 
 th, td {
     padding: 10px;
-    border-right: 1px solid black;
-    border-bottom: 1px solid black;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
     text-align: center;
-    color: black;
+    color: #e0e0e0;
+   
 }
 
 
 th {
-    background-color: white;
+    background-color: #121212;
 }
 
 
@@ -61,21 +63,44 @@ th {
 }
 
 
+
 .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    color: black;
+    padding: 25px;
+    border-radius: 12px;
+    width: 350px;
+    background-color: #181818;
+    color: #e0e0e0;
+       border: 1px solid #333;
 }
 
 
-.modal-content input {
-    width: 90%;
-    padding: 8px;
-    margin: 8px 0;
+.modal-content input, 
+.modal-content select {
+    width: 102%; 
+    box-sizing: border-box; 
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #222; 
+    color: #e0e0e0;
+    border: 1px solid #444;
+    border-radius: 6px;
+    outline: none;
 }
 
+.modal-content select{
+    width: 102% !important;
+}
+
+#description {
+    width: 96%;          
+    height: 100px;        
+    padding: 10px;         
+    border-radius: 8px;   
+    background-color: #222;
+    color: #e0e0e0;
+    border: 1px solid #444;
+    resize: vertical;      
+}
 
 .modal-button {
     display: flex;
@@ -102,11 +127,19 @@ th {
 }
 
 
-#description {
-    width: 85%;          
-    height: 100px;        
-    padding: 10px;         
-    border-radius: 8px;   
+
+
+.delete-button{
+    padding: 5px 10px;
+    background-color: rgb(127, 109, 109);
+    color: black;
     border: 1px solid black;
-    resize: vertical;      
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-button:hover{
+    background-color: red;
+    color: white;
+    border: none;
 }
