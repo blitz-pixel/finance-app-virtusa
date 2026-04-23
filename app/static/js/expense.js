@@ -32,7 +32,7 @@ async function addExpense(event) {
     var category = document.getElementById("category").value ;
     console.log(category);
     var amount = document.getElementById("amount").value;
-    var date = document.getElementById("date").value;
+    var date = document.getElementById("date").value || new Date().toISOString().split('T')[0];
     var description = document.getElementById("description").value || "A simple expense";
     var snackbar = document.getElementById("snackbar");
     var table = document.getElementById("data-table");

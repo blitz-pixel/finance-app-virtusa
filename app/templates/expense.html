@@ -13,12 +13,12 @@
 {% block navigation %}
 
     <div class="nav-header">
-        <a href="{{ url_for('category') }}">Categories</a> 
-        <a href="{{ url_for('report') }}"> Report </a>
+        <a href="{{ url_for('category.category') }}">Categories</a> 
+        <a href="{{ url_for('report.report') }}"> Report </a>
     </div>
 
     <div class="logout-link">
-        <a href="{{ url_for('logout') }}">Logout</a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
     </div>
 {% endblock %}
 {% block content %}
