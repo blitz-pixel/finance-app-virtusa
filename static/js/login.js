@@ -26,8 +26,10 @@ async function submitCredentials(event) {
     }
     snackbar.className = "show-success";
     snackbar.innerText = data.message || "Login successful!";
+    document.body.classList.add("is-loading")
     setTimeout(function(){ snackbar.className = snackbar.className.replace("show-success", ""); }, 2000);
-    setTimeout(function(){ window.location.href = "/expense"},2000);
+    setTimeout(function(){ window.location.href = "/expense" },2000);
+    
     } catch (error){
         snackbar.className = "show-error";
         snackbar.innerText =  "An Error occurred";

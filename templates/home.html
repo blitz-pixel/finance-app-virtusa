@@ -12,10 +12,16 @@
         <a href="{{ url_for('signup') }}">Signup</a>
     </div>
 
+    <div class="rest-links">
+        <a    href="{{ url_for('expense') }}">Expenses</a>
+        <a    href="{{ url_for('category') }}">Categories</a>
+        <a  href="{{ url_for('report') }}"> Report </a>
+    </div>
 
 {% endblock %}
 {% block content %}
 <div class="text-container">
+    <div id="snackbar"></div>
     <div class="main-heading">
         <h2>Welcome to the Expense Tracker App</h2>
     </div>

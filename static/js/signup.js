@@ -91,7 +91,8 @@ async function submitForm(event) {
     snackbar.className = "show-success";
     snackbar.innerText = data.message || "User registered successfully";
     setTimeout(function(){ snackbar.className = snackbar.className.replace("show-success", ""); }, 2000);
-    setTimeout(function(){ window.location.href = '/login'; }, 1000);   // dummy redirect
+    document.body.classList.add("is-loading")
+    setTimeout(function(){ window.location.href = '/login'; }, 1000);   
     } catch (error) {
         snackbar.className = "show-error";
         snackbar.innerText = "An error occurred during registration";

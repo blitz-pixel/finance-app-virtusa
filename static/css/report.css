@@ -141,3 +141,6 @@
     color: black;
 }
 
+input[type="button"] {
+    cursor: pointer;
+}

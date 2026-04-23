@@ -63,7 +63,6 @@ def sample():
 
 @app.route('/')
 def home():
-    # return redirect(url_for('expense'))
     return render_template('home.html')
 
 @app.route('/login',methods=['GET','POST'])
@@ -73,14 +72,16 @@ def login():
         user = data.get('username')
         password = data.get('password')
         try:
-            user = User.query.filter_by(user_name=user).first()
-            if not user or (user and not check_password_hash(user.password, password)):
+            session.clear()
+            user_username = User.query.filter_by(user_name=user).first()
+            user_email = User.query.filter_by(email=user).first()
+            user_valid = user_username or user_email
+            if not user_valid or (user_valid and not check_password_hash(user_valid.password, password)):
                 return jsonify({"message": "Invalid username or password"}), 401
             
-            session.clear()
-            session['username'] = user.user_name
+            session['username'] = user_valid.user_name
             return jsonify({"message": "Login successful"}), 200
-            # add logic for audit table and adding session management
+    
         except Exception as e:
             print(f"Error occurred during login: {e}")
             return jsonify({"message": "An error occurred"}), 500
@@ -119,15 +120,10 @@ def signup():
        
         
         return jsonify({"message": "User registered successfully"}),200
-        # add logic for audit table
+     
       
     
     return render_template('signup.html')
-
-
-@app.route('/forget-password')
-def forget_password():
-    return render_template('forget-password.html')
 
 @app.route('/expense',methods=['GET', 'POST','DELETE'])
 def expense():
@@ -184,7 +180,7 @@ def expense():
         print(f"Error occurred while displaying categories: {e}")
         return jsonify({"message": "An error occurred"}), 500
     print(categories)
-    return render_template('expense.html',categories=categories, expenses=expenses)
+    return render_template('expense.html',categories=categories, expenses=expenses, username=username)
 
 @app.route('/category', methods=['GET', 'POST', 'DELETE'])
 def category():

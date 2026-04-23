@@ -8,13 +8,17 @@
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}
-
+{% block navigation %}
+  <div class="nav-header">
+        <a href="{{ url_for('home') }}">Home</a> 
+    </div>
+{% endblock %}
 {% block content %}
 <div class="authentication-container">
         <div class = "authentication-form">
             <h2>Login</h2>
             <form onsubmit="submitCredentials(event)">
-                <input type="text" name="username" placeholder="username" id="username" required><br>
+                <input type="text" name="username" placeholder="username or email" id="username" required><br>
                 <input type="password" name="password" placeholder="password" id="password" required><br>
                 <button type="submit">Login</button>
             </form>
