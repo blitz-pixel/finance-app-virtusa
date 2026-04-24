@@ -141,6 +141,6 @@
     color: black;
 }
 
-input[type="button"] {
+button:enabled:hover, select:enabled:hover{
     cursor: pointer;
 }

@@ -8,6 +8,7 @@ from app.utils.decorators import login_required
 
 
 route_bp = Blueprint("report", __name__)
+
 @route_bp.route('/report', methods=['GET', 'POST'])
 @login_required
 def report(user):        

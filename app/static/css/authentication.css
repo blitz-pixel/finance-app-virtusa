@@ -61,8 +61,10 @@ button:disabled {
     opacity: 0.6;
 }
 
-button:enabled:hover{
+button:enabled:hover, select:enabled:hover{
     cursor: pointer;
 }
+
+
 
 
